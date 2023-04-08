@@ -7,15 +7,57 @@
 #include <unistd.h> 
 #include <sys/socket.h>
 #include <arpa/inet.h> 
+#include <ixp.h>
+
+#include "dat.h"
+#include "fns.h"
+#include "config.h"
 
 #define PORT 8080
+
+void srvCons(int sock) {
+	// one way for now
+	while(true) {
+		char buf[100];
+
+		read(sock, buf, 1);
+		printf("%c", buf[0]);
+	}
+}
+		
+
+fltRunSrv init_service(fltService srvc) {
+	fltRunSrv ret;
+	char *name = srvc.name;
+
+	ret.name = malloc(strlen(name)+1);
+	strcpy(ret.name, name);
+	
+	int sock[2];
+	socketpair(AF_UNIX, SOCK_STREAM, 0, sock);
+	ret.sock = sock[0];
+
+	if (ret.pid = fork()) {
+		return ret;
+	}
+	srvc.func(sock[1]);
+	exit(0);
+}
 
 int init_services() {
 	int sock[2];
 	int ret = socketpair(AF_UNIX, SOCK_STREAM, 0, sock);
-	if (!fork()) {
-		return sock[0];
+
+	int nsrv = sizeof(services) / sizeof(services[0]);
+	fltRunSrv *servers = malloc(sizeof(fltRunSrv) * nsrv);
+
+	for (int i=0;i<nsrv;i++) {
+		servers[i] = init_service(services[i]);
 	}
+
+	return servers[0].sock;
+
+
 
 	while (true) {
 		char buf[100];
@@ -69,6 +111,7 @@ int main()
 	int procsock = create_proc();
 	int servsock = init_services();
 
+	printf("in here\n");
 	while (true) {
 		char buf[100];
 		int n = read(procsock, buf, 1);
