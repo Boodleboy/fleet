@@ -7,6 +7,7 @@
 #include <unistd.h> 
 #include <sys/socket.h>
 #include <arpa/inet.h> 
+#include <poll.h>
 #include <ixp.h>
 
 #include "dat.h"
@@ -21,10 +22,10 @@ void srvCons(int sock) {
 		char buf[100];
 
 		read(sock, buf, 1);
-		printf("%c", buf[0]);
+
+		write(1, buf, 1);
 	}
 }
-		
 
 fltRunSrv init_service(fltService srvc) {
 	fltRunSrv ret;
@@ -44,39 +45,37 @@ fltRunSrv init_service(fltService srvc) {
 	exit(0);
 }
 
-int init_services() {
+flt_resources init_services() {
 	int sock[2];
-	int ret = socketpair(AF_UNIX, SOCK_STREAM, 0, sock);
+	flt_resources ret;
 
-	int nsrv = sizeof(services) / sizeof(services[0]);
-	fltRunSrv *servers = malloc(sizeof(fltRunSrv) * nsrv);
+	ret.count = sizeof(services) / sizeof(services[0]);
+	ret.servers = malloc(sizeof(fltRunSrv*) * (ret.count));
 
-	for (int i=0;i<nsrv;i++) {
-		servers[i] = init_service(services[i]);
+	for (int i=0;i<ret.count;i++) {
+		ret.servers[i] = init_service(services[i]);
 	}
 
-	return servers[0].sock;
-
-
-
-	while (true) {
-		char buf[100];
-		int n = read(sock[1], buf, 1);
-		printf("%c", buf[0]);
-	}
+	return ret;
 }
 
-int create_proc() {
+flt_proc create_proc() {
+	flt_proc ret;
 	int sock[2];
-	int ret = socketpair(AF_UNIX, SOCK_STREAM, 0, sock);
-	if (!fork()) {
-		return sock[0];
+
+	socketpair(AF_UNIX, SOCK_STREAM, 0, sock);
+	ret.pid = fork();
+	if (!ret.pid) {
+		ret.sock = sock[0];
+		return ret;
 	}
 	// this is the child process. Right now it'll just read keyboard and write
 	// to a pipe, which writes to the screen. 
 	while (true) {
-		char c = getchar();
-		write(sock[1], &c, 1);
+		char buf[100];
+		read(0, buf, 1);
+
+		write(sock[1], buf, 1);
 	}
 }
 
@@ -108,14 +107,32 @@ int main()
 
 	*/
 
-	int procsock = create_proc();
-	int servsock = init_services();
 
-	printf("in here\n");
+	flt_resources resources = init_services();
+	flt_proc proc = create_proc();
+
+	nfds_t nfds = resources.count + 1;
+	struct pollfd* fds = malloc(nfds * sizeof(struct pollfd));
+
+	struct pollfd myfd = { .fd=proc.sock, .events=POLLIN, .revents=0 };
+	fds[nfds-1] = myfd;
+
+	for (int i=0;i<resources.count;i++) {
+		struct pollfd myfd = { .fd=resources.servers[i].sock, .events=POLLIN, .revents=0 };
+		fds[i] = myfd;
+	}
+
 	while (true) {
-		char buf[100];
-		int n = read(procsock, buf, 1);
-		write(servsock, buf, 1);
+		int n = poll(fds, nfds, -1);
+		for (int i=0;i<nfds;i++) {
+			if (fds[i].revents == 0) 
+				continue;
+			// for now just put all data into cons
+			char buf[1];
+			read(fds[i].fd, buf, 1);
+			write(resources.servers[0].sock, buf, 1); // cons is hardcoded.
+													  // Don't forget this
+		}
 	}
 
 	/*
