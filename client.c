@@ -10,22 +10,15 @@
 #include <poll.h>
 #include <ixp.h>
 
+#include "hashmap.h"
 #include "dat.h"
 #include "fns.h"
-#include "config.h"
 
 #define PORT 8080
 
-void srvCons(int sock) {
-	// one way for now
-	while(true) {
-		char buf[100];
-
-		read(sock, buf, 1);
-
-		write(1, buf, 1);
-	}
-}
+fltService services[] = {
+	{ .name="console", .func=srvCons }
+};
 
 fltRunSrv init_service(fltService srvc) {
 	fltRunSrv ret;
@@ -111,29 +104,8 @@ int main()
 	flt_resources resources = init_services();
 	flt_proc proc = create_proc();
 
-	nfds_t nfds = resources.count + 1;
-	struct pollfd* fds = malloc(nfds * sizeof(struct pollfd));
+	run_middleman(resources, proc);
 
-	struct pollfd myfd = { .fd=proc.sock, .events=POLLIN, .revents=0 };
-	fds[nfds-1] = myfd;
-
-	for (int i=0;i<resources.count;i++) {
-		struct pollfd myfd = { .fd=resources.servers[i].sock, .events=POLLIN, .revents=0 };
-		fds[i] = myfd;
-	}
-
-	while (true) {
-		int n = poll(fds, nfds, -1);
-		for (int i=0;i<nfds;i++) {
-			if (fds[i].revents == 0) 
-				continue;
-			// for now just put all data into cons
-			char buf[1];
-			read(fds[i].fd, buf, 1);
-			write(resources.servers[0].sock, buf, 1); // cons is hardcoded.
-													  // Don't forget this
-		}
-	}
 
 	/*
 	char buf[100] = "hellooooo";
