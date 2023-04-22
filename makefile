@@ -1,22 +1,27 @@
-default: server client
+CC = gcc
+CFLAGS = -Wall -Wextra -g
 
-codefiles = client.c\
-			middleman.c\
-			cons.c\
-			hashmap.c
+TARGET = client
 
-objfiles = client.o\
-		   middleman.o\
-		   cons.o\
-		   hashmap.o
+SRC = client.c\
+		 middleman.c\
+		 cons.c\
+		 hashmap.c
 
-server: server.c
-	gcc -o server server.c
+HEADERS = fns.h\
+		 dat.h\
+		 hashmap.h
 
-client: client.c
-	gcc -c $(codefiles)
-	gcc -o client $(objfiles)
+OBJ = $(SRC:.c=.o)
+
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
+
+%.o: %.c $(HEADERS)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(OBJ) $(TARGET)
 
 run:
-	./server &
 	./client
