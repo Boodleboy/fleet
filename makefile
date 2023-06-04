@@ -1,7 +1,7 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g
+CFLAGS = -Wall -Wextra -g 
 
-TARGET = client
+TARGET = main
 
 SRC = client.c\
 		 middleman.c\
@@ -14,8 +14,12 @@ HEADERS = fns.h\
 
 OBJ = $(SRC:.c=.o)
 
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
+# TODO: figure out organization of these files. This is a mess
+test/cons: test/cons.o
+	$(CC) $(CFLAGS) -o $@ cons.o $^ -lixp
+
+$(TARGET): $(OBJ) main.o
+	$(CC) $(CFLAGS) -o $@ $^ -lixp 
 
 %.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
