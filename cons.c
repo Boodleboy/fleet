@@ -13,13 +13,13 @@
 #include "dat.h"
 #include "fns.h"
 
-void srvCons(int sock) {
+void srvCons(int cons_fd, int sys_fd) {
 	while(true) {
 		char buf[100];
 
-		read(sock, buf, 1);
+		read(cons_fd, buf, 1);
 
-		write(1, buf, 1);
+		write(sys_fd, buf, 1);
 	}
 }
 

@@ -16,6 +16,10 @@
 
 #define PORT 8080
 
+void write_Fcall(IxpFcall, int);
+IxpFIO make_twrite(uint32_t, uint64_t, uint32_t, char*);
+
+char *def_version = "9P2000";
 fltService services[] = {
 	{ .name="console", .func=srvCons }
 };
@@ -67,64 +71,45 @@ flt_proc create_proc() {
 	while (true) {
 		char buf[100];
 		read(0, buf, 1);
-
+		// TODO: write actual 9P fcalls to this fd
+		IxpFcall call;
+		call.twrite = make_twrite(0, 0, 1, buf);
+		
 		write(sock[1], buf, 1);
 	}
 }
 
-int main()
-{
-	// Remove all of this server-client stuff for now. Without a bare minimum
-	// client the server is worthless.
-	
-	/*
-	int sockfd, connfd;
-	struct sockaddr_in servaddr, cli;
-
-	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd == -1) {
-		fprintf(stderr, "failed to create socket");
-		exit(-1);
-	}
-	fprintf(stderr, "made socket\n");
-
-	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-	servaddr.sin_port = htons(PORT);
-
-	if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) != 0) {
-		fprintf(stderr, "failed to connect to server");
-		exit(-1);
-	}
-	fprintf(stderr, "connected to server\n");
-
-	*/
-
-
-	flt_resources resources = init_services();
-	flt_proc proc = create_proc();
-
-	run_middleman(resources, proc);
-
-
-	/*
-	char buf[100] = "hellooooo";
-
-	write(sockfd, buf, strlen(buf)+1);
-
-	
-
-	fprintf(stderr, "message sent\n");
-
-	int n = read(sockfd, buf, sizeof(buf));
-	fprintf(stderr, "message recieved:\n");
-	for (int i=0;i<n;i++)
-		fprintf(stderr, "%c", buf[i]);
-	fprintf(stderr, "\n");
-
-	fprintf(stderr, "closing socket\n");
-
-	close(sockfd);
-	*/
-	return 0;
+void write_Fcall(IxpFcall call, int fd) {
 }
+
+void send_fcall(int fd, IxpFcall *call) {
+}
+
+IxpFHdr make_hdr(uint8_t type, uint16_t tag, uint32_t fid) {
+	IxpFHdr ret;
+	ret.type = type;
+	ret.tag = tag;
+	ret.fid = fid;
+	return ret;
+}
+
+IxpFcall make_tversion() {
+	IxpFcall call;
+	IxpFVersion ret;
+	ret.hdr = make_hdr(P9_TVersion, 0, 0); // TODO: make actual tag 
+	ret.msize = 2000;
+	ret.version = def_version;
+	call.tversion = ret;
+	return call;
+}
+
+IxpFIO make_twrite(uint32_t fid, uint64_t offset, uint32_t count, char *data) {
+	IxpFIO ret;
+	ret.hdr = make_hdr(P9_TWrite, 0, fid);
+	ret.offset = offset;
+	ret.count = count;
+	ret.data = data;
+	return ret;
+}
+
+
