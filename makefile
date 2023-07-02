@@ -15,8 +15,8 @@ HEADERS = fns.h\
 OBJ = $(SRC:.c=.o)
 
 # TODO: figure out organization of these files. This is a mess
-test/cons: test/cons.o $(OBJ)
-	$(CC) $(CFLAGS) -o $@ cons.o client.o $^ -lixp
+test/cons: test/cons.o cons.o client.o
+	$(CC) $(CFLAGS) -o $@ $^ -lixp
 
 $(TARGET): $(OBJ) main.o 
 	$(CC) $(CFLAGS) -o $@ $^ -lixp 
