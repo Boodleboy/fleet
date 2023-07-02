@@ -33,7 +33,21 @@ main(void) {
 		srvCons(con_sock[0], sys_sock[0]);
 	}
 
+	int rval;
+
 	// Attach to server
+	IxpFcall version = make_tversion();
+	IxpMsg msg;
+
+	printf("about to fcall2msg\n");
+	rval = ixp_fcall2msg(&msg, &version);
+	printf("fcall2msg val = %d\n", rval);
+	rval = ixp_sendmsg(confd, &msg);
+	printf("sendmsg val = %d\n", rval);
+
+	rval = ixp_recvmsg(confd, &msg);
+	printf("recvmsg val = %d\n", rval);
+
 	
 
 

@@ -1,0 +1,2 @@
+test/cons depends on cons.o and client.o, but the makefile recipe doesn't create
+those files
