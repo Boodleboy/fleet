@@ -4,13 +4,13 @@ CFLAGS = -Wall -Wextra -g
 TARGET = server
 
 SRC = client.c\
-		 middleman.c\
-		 cons.c\
-		 hashmap.c
+	middleman.c\
+	cons.c\
+	hashmap.c
 
 HEADERS = fns.h\
-		 dat.h\
-		 hashmap.h
+	dat.h\
+	hashmap.h
 
 OBJ = $(SRC:.c=.o)
 
