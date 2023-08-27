@@ -35,7 +35,7 @@ fltRunSrv init_service(fltService srvc) {
 	socketpair(AF_UNIX, SOCK_STREAM, 0, sock);
 	ret.sock = sock[0];
 
-	if (ret.pid = fork()) {
+	if ( (ret.pid = fork()) ) {
 		return ret;
 	}
 	srvc.func(sock[1]);

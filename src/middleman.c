@@ -26,8 +26,8 @@ void run_middleman(flt_resources resources, flt_proc proc) {
 	}
 
 	while (true) {
-		int n = poll(fds, nfds, -1);
-		for (int i=0;i<nfds;i++) {
+		poll(fds, nfds, -1);
+		for (nfds_t i=0;i<nfds;i++) {
 			if (fds[i].revents == 0) 
 				continue;
 			// for now just put all data into cons
