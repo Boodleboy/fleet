@@ -12,7 +12,8 @@
 
 int main()
 {
-	int sockfd, connfd, len;
+	int sockfd, connfd;
+	socklen_t len;
 	struct sockaddr_in servaddr, cli;
 
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
