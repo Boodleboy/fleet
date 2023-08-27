@@ -37,10 +37,14 @@ main(void) {
 
 	// Attach to server
 	IxpFcall version = make_tversion();
-	IxpMsg msg;
+	int msgsize = 4096;
+	char *msgdat = malloc(msgsize);
+	printf("about to call ixp_message\n");
+	IxpMsg msg = ixp_message(msgdat, msgsize, MsgPack);
 
 	printf("about to fcall2msg\n");
 	rval = ixp_fcall2msg(&msg, &version);
+	
 	printf("fcall2msg val = %d\n", rval);
 	rval = ixp_sendmsg(confd, &msg);
 	printf("sendmsg val = %d\n", rval);
