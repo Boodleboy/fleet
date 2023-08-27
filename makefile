@@ -4,6 +4,7 @@ CFLAGS = -Wall -Wextra -g
 TARGET = server
 
 SRC = client.c\
+	server.c\
 	middleman.c\
 	cons.c\
 	hashmap.c
@@ -14,7 +15,7 @@ HEADERS = fns.h\
 
 OBJ = $(SRC:.c=.o)
 
-$(TARGET): $(OBJ) main.o 
+$(TARGET): $(OBJ) 
 	$(CC) $(CFLAGS) -o $@ $^ -lixp 
 
 # TODO: figure out organization of these files. This is a mess
