@@ -3,30 +3,32 @@ CFLAGS = -Wall -Wextra -g
 
 TARGET = server
 
-SRC = client.c\
-	server.c\
-	middleman.c\
-	cons.c\
-	hashmap.c
+SRCDIR = src
+OBJDIR = obj
 
-HEADERS = fns.h\
+FILES = client\
+	server\
+	middleman\
+	cons\
+	hashmap
+
+HFILES = fns.h\
 	dat.h\
 	hashmap.h
 
-OBJ = $(SRC:.c=.o)
+SRC = $(FILES:%=$(SRCDIR)/%.c)
+OBJ = $(FILES:%=$(OBJDIR)/%.o)
+HDR = $(HFILES:%=$(SRCDIR)/%)
 
 $(TARGET): $(OBJ) 
 	$(CC) $(CFLAGS) -o $@ $^ -lixp 
 
-# TODO: figure out organization of these files. This is a mess
-test/cons: test/cons.o cons.o client.o
-	$(CC) $(CFLAGS) -o $@ $^ -lixp
-
-%.o: %.c $(HEADERS)
+$(OBJDIR)/%.o: $(SRCDIR)/%.c $(HDR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-test/%.0: test/%.c $(HEADERS)
-	$(CC) $(CFLAGS) -c $< -o $@
+# commenting test stuff for now
+#test/%.0: test/%.c $(HDR)
+#	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(OBJ) $(TARGET)
