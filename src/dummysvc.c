@@ -1,12 +1,16 @@
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include <ixp.h>
 
 #include "service.h"
+#include "dummysvc.h"
+
+#define MSZ 4096;
 
 void 
 dummy_service(int in_pipe) {
-	int bsize = 4096;
+	int bsize = MSZ;
 	char *buf = malloc(bsize);
 	int n;
 	IxpMsg msg;
@@ -70,3 +74,70 @@ dummy_service(int in_pipe) {
 
 	}
 }
+
+// need wrapper to set tag and send message for each response
+void
+dummy_version(IxpFVersion *icall, IxpFcall *ocall) {
+	IxpFVersion oversion;
+	oversion.hdr.type = P9_RVersion;
+	oversion.msize = MSZ;
+
+	// TODO: malloc wrapper func?
+	oversion.version = malloc(20); 
+
+	strcpy(oversion.version, "9P2000");
+}
+
+/*
+void
+dummy_auth(IxpFAttach *icall, IxpFcall *ocall) {
+}
+
+void
+dummy_attach(IxpFAttach *icall, IxpFcall *ocall) {
+}
+
+void
+dummy_flush(IxpFTFlush *icall, IxpFcall *ocall) {
+}
+
+void
+dummy_walk(IxpFTWalk *icall, IxpFcall *ocall) {
+}
+
+void
+dummy_open(IxpFcall *icall, IxpFcall *ocall) {
+}
+
+void
+dummy_create(IxpFcall *icall, IxpFcall *ocall) {
+}
+
+void
+dummy_read(IxpFcall *icall, IxpFcall *ocall) {
+}
+
+void
+dummy_write(IxpFcall *icall, IxpFcall *ocall) {
+}
+
+void
+dummy_clunk(IxpFcall *icall, IxpFcall *ocall) {
+}
+
+void
+dummy_remove(IxpFcall *icall, IxpFcall *ocall) {
+}
+
+void
+dummy_stat(IxpFcall *icall, IxpFcall *ocall) {
+}
+
+void
+dummy_wstat(IxpFcall *icall, IxpFcall *ocall) {
+}
+
+void
+dummy_error(IxpFcall *icall, IxpFcall *ocall, char *err) {
+}
+*/

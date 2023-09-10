@@ -6,6 +6,7 @@ struct Service {
 	int status;
 	int pid;
 	int pipe;
+	int msize;
 };
 
 void init_service(Service *);
