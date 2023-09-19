@@ -29,6 +29,8 @@ TSTSRC = $(TFILES:%=$(TSTDIR)/%.c)
 TSTOBJ = $(TFILES:%=$(TSTOBJDIR)/%.o)
 TSTDEP = $(filter-out $(OBJDIR)/server.o,$(OBJ))
 
+.PHONY: test
+
 $(TARGET): $(OBJ) 
 	$(CC) $(CFLAGS) -o $@ $^ -lixp 
 
@@ -42,9 +44,8 @@ testsuite: $(TSTOBJ) $(TSTDEP)
 	echo $(TSTDEP)
 	$(CC) $(CFLAGS) -o $@ $^ -lixp -lcheck
 
-# commenting test stuff for now
-#test/%.0: test/%.c $(HDR)
-#	$(CC) $(CFLAGS) -c $< -o $@
+test: testsuite
+	./testsuite
 
 clean:
 	rm -f $(OBJ) $(TARGET) $(TSTOBJ) $(TESTTARG)
