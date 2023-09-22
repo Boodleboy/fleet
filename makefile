@@ -15,15 +15,19 @@ FILES = client\
 	cons\
 	hashmap
 
-TFILES = main
+TFILES = main\
+		 dummy
 
 HFILES = fns.h\
 	dat.h\
 	hashmap.h
 
+THFILES = suites.h
+
 SRC = $(FILES:%=$(SRCDIR)/%.c)
 OBJ = $(FILES:%=$(OBJDIR)/%.o)
 HDR = $(HFILES:%=$(SRCDIR)/%)
+THDR = $(THFILES:%=$(TSTDIR)/%)
 
 TSTSRC = $(TFILES:%=$(TSTDIR)/%.c)
 TSTOBJ = $(TFILES:%=$(TSTOBJDIR)/%.o)
@@ -37,7 +41,7 @@ $(TARGET): $(OBJ)
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HDR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(TSTOBJDIR)/%.o: $(TSTDIR)/%.c $(HDR)
+$(TSTOBJDIR)/%.o: $(TSTDIR)/%.c $(HDR) $(THDR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 testsuite: $(TSTOBJ) $(TSTDEP)
