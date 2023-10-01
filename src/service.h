@@ -11,10 +11,10 @@ struct Service {
 	int msize;
 };
 
-void init_service(Service *);
+int init_service(Service *);
 // TODO: end_service
-// TODO: service_send
-// TODO: service_recv:
+int service_send(Service*, IxpFcall*);
+int service_recv(Service*, IxpFcall*);
 
 extern Service dummysvc; 
 

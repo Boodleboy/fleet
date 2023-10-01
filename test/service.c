@@ -5,9 +5,24 @@
 #include "../src/service.h"
 
 START_TEST (basic) {
-	init_service(&dummysvc);
+	int ret;
 
-	fail_unless(1 == 1);
+	ret = init_service(&dummysvc);
+	fail_unless(ret == 0);
+	fail_unless(dummysvc.status == 1);
+
+	IxpFcall icall;
+	IxpFAttach attach;
+	attach.hdr.type = P9_TAttach;
+	attach.hdr.tag = 1;
+	attach.hdr.fid = 0;
+	attach.afid = 2;
+	attach.uname = "Dummy";
+	attach.aname = "ADummy";
+	icall.tattach = attach;
+	ret = service_send(&dummysvc, &icall);
+	fail_unless(ret == 0);
+
 }
 
 void 

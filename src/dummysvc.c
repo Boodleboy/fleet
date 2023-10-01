@@ -5,11 +5,12 @@
 
 #include "service.h"
 
-#define MSZ 4096;
+#define MSZ 4096
 
 Service dummysvc = (Service){
 	.name = "dummy",
-	.func = dummy_service
+	.func = dummy_service,
+	.msize = MSZ
 };
 
 void 
