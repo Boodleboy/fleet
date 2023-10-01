@@ -10,20 +10,13 @@ START_TEST (basic) {
 	fail_unless(1 == 1);
 }
 
-int 
-service_suite()
+void 
+service_tcase(Suite *s)
 {
-    Suite *s1 = suite_create("Service");
     TCase *tc1_1 = tcase_create("Service");
-    SRunner *sr = srunner_create(s1);
-    int nf;
 
-    suite_add_tcase(s1, tc1_1);
+    suite_add_tcase(s, tc1_1);
     tcase_add_test(tc1_1, basic);
 
-    srunner_run_all(sr, CK_ENV);
-    nf = srunner_ntests_failed(sr);
-    srunner_free(sr);
-
-    return nf == 0 ? 0 : 1;
+	return;
 }

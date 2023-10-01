@@ -6,19 +6,12 @@ START_TEST (dummy_test) {
 	fail_unless(1 == 1);
 }
 
-int
-dummy_suite() {
-	Suite *s1 = suite_create("Dummy");
+void
+dummy_tcase(Suite *s) {
 	TCase *tc1 = tcase_create("Dummy");
-	SRunner *sr = srunner_create(s1);
-	int nf;
 
-	suite_add_tcase(s1, tc1);
+	suite_add_tcase(s, tc1);
 	tcase_add_test(tc1, dummy_test);
 
-    srunner_run_all(sr, CK_ENV);
-    nf = srunner_ntests_failed(sr);
-    srunner_free(sr);
-
-    return nf == 0 ? 0 : 1;
+	return;
 }

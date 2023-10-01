@@ -1,2 +1,4 @@
-int dummy_suite(void);
-int service_suite(void);
+#include <check.h>
+
+void dummy_tcase(Suite*);
+void service_tcase(Suite*);
