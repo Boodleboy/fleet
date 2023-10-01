@@ -1,3 +1,5 @@
+#include "dummysvc.h"
+
 typedef struct Service Service;
 
 struct Service {
@@ -10,3 +12,9 @@ struct Service {
 };
 
 void init_service(Service *);
+// TODO: end_service
+// TODO: service_send
+// TODO: service_recv:
+
+extern Service dummysvc; 
+

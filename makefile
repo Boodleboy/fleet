@@ -9,14 +9,16 @@ OBJDIR = obj
 TSTDIR = test
 TSTOBJDIR = test/obj
 
-FILES = client\
-	server\
+FILES = server\
 	middleman\
 	cons\
-	hashmap
+	hashmap\
+	service\
+	dummysvc
 
 TFILES = main\
-		 dummy
+		 dummy\
+		 service
 
 HFILES = fns.h\
 	dat.h\

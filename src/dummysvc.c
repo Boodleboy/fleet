@@ -1,12 +1,16 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <ixp.h>
+#include <stdio.h>
 
 #include "service.h"
-#include "dummysvc.h"
 
 #define MSZ 4096;
+
+Service dummysvc = (Service){
+	.name = "dummy",
+	.func = dummy_service
+};
 
 void 
 dummy_service(int in_pipe) {

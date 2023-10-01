@@ -7,6 +7,7 @@ main(void) {
 
 	int nf = 0;
 	nf += dummy_suite();
+	nf += service_suite();
 
     return nf == 0 ? 0 : 1;
 

@@ -1,5 +1,7 @@
 #include <ixp.h>
 
+void dummy_service(int);
+
 void dummy_version(IxpFVersion*, IxpFcall*);
 void dummy_auth(IxpFAttach*, IxpFcall*);
 void dummy_attach(IxpFAttach*, IxpFcall*);
