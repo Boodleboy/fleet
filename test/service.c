@@ -23,6 +23,12 @@ START_TEST (basic) {
 	ret = service_send(&dummysvc, &icall);
 	fail_unless(ret == 0);
 
+	/*
+	IxpFcall ocall;
+	ret = service_recv(&dummysvc, &ocall);
+	fail_unless(ret == 0);
+	*/
+
 }
 
 void 

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -18,6 +19,8 @@ init_service(Service *service) {
 	}
 
 	(service->func)(pipes[1]);
+	exit(0);
+	return -1;
 }
 
 int
@@ -27,8 +30,7 @@ service_send(Service *s, IxpFcall *icall) {
 		return 1;
 	}
 	IxpMsg msg = ixp_message(buf, s->msize, MsgUnpack);
-	IxpFcall call;
-	int msize = ixp_fcall2msg(&msg, &call);
+	int msize = ixp_fcall2msg(&msg, icall);
 	if (msize == 0) {
 		return 1;
 		// error
@@ -39,7 +41,9 @@ service_send(Service *s, IxpFcall *icall) {
 	return 0;
 }
 
+/*
 int
 service_recv(Service *s, IxpFcall *ocall) {
 	return 1;
 }
+*/

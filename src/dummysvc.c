@@ -17,20 +17,26 @@ void
 dummy_service(int in_pipe) {
 	int bsize = MSZ;
 	char *buf = malloc(bsize);
-	int n;
 	IxpMsg msg;
 	IxpFcall call, resp;
 
 	while (1) {
-		n = read(in_pipe, buf, bsize);
+		// "read from pipe into buf" isn't sufficient. Must read size of the 9P
+		// message, then continue reading from pipe until that size has been
+		// read. This will require a simple wrapper around this stuff. Should be
+		// simple enough.
+		read(in_pipe, buf, bsize);
 		msg = ixp_message(buf, bsize, MsgPack);
 		int msize = ixp_msg2fcall(&msg, &call);
 		if (msize == 0) {
 			// error
 		}
 		switch (call.hdr.type) {
-			P9_TVersion:
+			case P9_TVersion:
+				dummy_version(&(call.version), &resp);
+				// TODO: write this resp to fd
 				break;
+/*
 			P9_TAuth:
 				break;
 			P9_TAttach:
@@ -57,7 +63,6 @@ dummy_service(int in_pipe) {
 				break;
 			P9_TWStat:
 				break;
-
 			P9_RVersion:
 			P9_RAuth:
 			P9_RAttach:
@@ -72,7 +77,9 @@ dummy_service(int in_pipe) {
 			P9_RRemove:
 			P9_RStat:
 			P9_RWStat:
+*/
 			default:
+				printf("error, bad message type: %d\n", call.hdr.type);
 				// error, shouldn't be getting these types
 				break;
 		}
@@ -90,7 +97,13 @@ dummy_version(IxpFVersion *icall, IxpFcall *ocall) {
 	// TODO: malloc wrapper func?
 	oversion.version = malloc(20); 
 
+	if (strcmp(icall->version, "9P2000") != 0) {
+		printf("invalid version");
+		return;
+	}
+
 	strcpy(oversion.version, "9P2000");
+	ocall->rversion = oversion;
 }
 
 /*
