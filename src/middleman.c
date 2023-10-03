@@ -8,8 +8,8 @@
 #include <sys/socket.h>
 #include <arpa/inet.h> 
 #include <poll.h>
-#include <ixp.h>
 
+#include "ixp.h"
 #include "dat.h"
 #include "fns.h"
 

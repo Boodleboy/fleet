@@ -1,5 +1,5 @@
-Bring libixp into this repo, and add include guards to it
-
 rename server.c to main.c to reflect it should only have main
 
 move obj directories around for consistency between test and real
+
+Write functions to read 9p messages to and from fds

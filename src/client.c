@@ -8,11 +8,11 @@
 #include <sys/socket.h>
 #include <arpa/inet.h> 
 #include <poll.h>
-#include <ixp.h>
 
 #include "hashmap.h"
 #include "dat.h"
 #include "fns.h"
+#include "ixp.h"
 
 #define PORT 8080
 
