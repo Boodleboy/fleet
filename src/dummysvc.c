@@ -16,16 +16,11 @@ Service dummysvc = (Service){
 void 
 dummy_service(int in_pipe) {
 	int bsize = MSZ;
-	char *buf = malloc(bsize);
-	IxpMsg msg;
 	IxpFcall call, resp;
 
 	while (1) {
-		msg = read_message(in_pipe, bsize);
-		int msize = ixp_msg2fcall(&msg, &call);
-		if (msize == 0) {
-			// error
-		}
+		call = read_fcall(in_pipe, bsize);
+
 		switch (call.hdr.type) {
 			case P9_TVersion:
 				dummy_version(&(call.version), &resp);

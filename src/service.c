@@ -52,7 +52,7 @@ read_message(int fd, int bufsize) {
 	}
 
 	n = 0;
-	while (n < msize) {
+	while (n < (int)msize) {
 		n += read(fd, buf+n, msize-4-n);
 	}
 	// TODO: handle errors
@@ -60,6 +60,21 @@ read_message(int fd, int bufsize) {
 	IxpMsg ret = ixp_message(buf, msize, MsgPack);
 	return ret;
 }
+
+IxpFcall
+read_fcall(int fd, int bufsize) {
+	IxpFcall ret;
+
+	IxpMsg msg = read_message(fd, bufsize);
+	int n = ixp_msg2fcall(&msg, &ret);
+	if (n != 0) {
+		// error
+	}
+
+	free(msg.data);
+	return ret;
+}
+
 
 
 
