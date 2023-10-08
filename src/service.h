@@ -15,6 +15,7 @@ int init_service(Service *);
 // TODO: end_service
 int service_send(Service*, IxpFcall*);
 int service_recv(Service*, IxpFcall*);
+IxpMsg read_message(int, int);
 
 extern Service dummysvc; 
 

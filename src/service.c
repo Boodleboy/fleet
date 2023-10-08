@@ -41,6 +41,28 @@ service_send(Service *s, IxpFcall *icall) {
 	return 0;
 }
 
+IxpMsg
+read_message(int fd, int bufsize) {
+	char *buf = malloc(bufsize);
+	uint32_t msize;
+
+	int n = 0;
+	while (n < 4) {
+		n += read(fd, ((char*)&msize)+n, 4-n);
+	}
+
+	n = 0;
+	while (n < msize) {
+		n += read(fd, buf+n, msize-4-n);
+	}
+	// TODO: handle errors
+
+	IxpMsg ret = ixp_message(buf, msize, MsgPack);
+	return ret;
+}
+
+
+
 /*
 int
 service_recv(Service *s, IxpFcall *ocall) {

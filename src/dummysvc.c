@@ -21,12 +21,7 @@ dummy_service(int in_pipe) {
 	IxpFcall call, resp;
 
 	while (1) {
-		// "read from pipe into buf" isn't sufficient. Must read size of the 9P
-		// message, then continue reading from pipe until that size has been
-		// read. This will require a simple wrapper around this stuff. Should be
-		// simple enough.
-		read(in_pipe, buf, bsize);
-		msg = ixp_message(buf, bsize, MsgPack);
+		msg = read_message(in_pipe, bsize);
 		int msize = ixp_msg2fcall(&msg, &call);
 		if (msize == 0) {
 			// error
