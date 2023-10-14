@@ -1,6 +1,3 @@
-client
-server
-main
-test/cons
+fleet
 testsuite
 *.o

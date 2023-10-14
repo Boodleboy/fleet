@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -g 
 
-TARGET = server
+TARGET = fleet
 TESTTARG = testsuite
 
 SRCDIR = src
@@ -9,20 +9,17 @@ OBJDIR = obj
 TSTDIR = test
 TSTOBJDIR = test/obj
 
-FILES = server\
-	middleman\
-	cons\
-	hashmap\
-	service\
-	dummysvc
+FILES = main\
+		service\
+		dummysvc
 
 TFILES = main\
 		 dummy\
 		 service
 
-HFILES = fns.h\
-	dat.h\
-	hashmap.h
+HFILES = service.h\
+		 ixp.h\
+		 dummysvc.h
 
 THFILES = suites.h
 
@@ -33,7 +30,7 @@ THDR = $(THFILES:%=$(TSTDIR)/%)
 
 TSTSRC = $(TFILES:%=$(TSTDIR)/%.c)
 TSTOBJ = $(TFILES:%=$(TSTOBJDIR)/%.o)
-TSTDEP = $(filter-out $(OBJDIR)/server.o,$(OBJ))
+TSTDEP = $(filter-out $(OBJDIR)/main.o,$(OBJ))
 
 .PHONY: test
 
