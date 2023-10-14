@@ -14,7 +14,7 @@ START_TEST (basic) {
 	IxpFcall icall;
 	IxpFAttach attach;
 	attach.hdr.type = P9_TAttach;
-	attach.hdr.tag = 1;
+	attach.hdr.tag = 5;
 	attach.hdr.fid = 0;
 	attach.afid = 2;
 	attach.uname = "Dummy";
@@ -23,11 +23,11 @@ START_TEST (basic) {
 	ret = service_send(&dummysvc, &icall);
 	fail_unless(ret == 0);
 
-	/*
 	IxpFcall ocall;
 	ret = service_recv(&dummysvc, &ocall);
 	fail_unless(ret == 0);
-	*/
+	fail_unless(ocall.hdr.tag == 5);
+	fail_unless(ocall.hdr.type == P9_RAttach);
 
 }
 

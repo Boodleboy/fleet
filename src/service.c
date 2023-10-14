@@ -41,6 +41,14 @@ service_send(Service *s, IxpFcall *icall) {
 	return 0;
 }
 
+int
+service_recv(Service *s, IxpFcall *ocall) {
+
+	*ocall = read_fcall(s->pipe, s->msize);
+
+	return 0;
+}
+
 IxpMsg
 read_message(int fd, int bufsize) {
 	char *buf = malloc(bufsize);
@@ -75,12 +83,17 @@ read_fcall(int fd, int bufsize) {
 	return ret;
 }
 
-
-
-
-/*
 int
-service_recv(Service *s, IxpFcall *ocall) {
-	return 1;
+send_fcall(int fd, int msize, IxpFcall *ocall) {
+	char *buf = malloc(msize);
+	IxpMsg msg = ixp_message(buf, msize, MsgUnpack);
+	int n = ixp_fcall2msg(&msg, ocall);
+	if (n == 0) {
+		return 1;
+		// error
+	}
+
+	write(fd, msg.data, n);
+	return 0;
 }
-*/
+

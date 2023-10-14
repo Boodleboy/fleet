@@ -17,6 +17,7 @@ int service_send(Service*, IxpFcall*);
 int service_recv(Service*, IxpFcall*);
 IxpMsg read_message(int, int);
 IxpFcall read_fcall(int, int);
+int send_fcall(int, int, IxpFcall*);
 
 extern Service dummysvc; 
 

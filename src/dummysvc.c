@@ -17,14 +17,20 @@ void
 dummy_service(int in_pipe) {
 	int bsize = MSZ;
 	IxpFcall call, resp;
+	printf("dummy is running at all\n");
 
 	while (1) {
 		call = read_fcall(in_pipe, bsize);
 
+		printf("dummy recieved a message\n");
 		switch (call.hdr.type) {
 			case P9_TVersion:
+				printf("dummy recieved tversion\n");
 				dummy_version(&(call.version), &resp);
-				// TODO: write this resp to fd
+				int val = send_fcall(in_pipe, bsize, &call);
+				if (val != 0) {
+					printf("dummy service error\n");
+				}
 				break;
 /*
 			P9_TAuth:
