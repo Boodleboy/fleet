@@ -5,7 +5,7 @@ TARGET = fleet
 TESTTARG = testsuite
 
 SRCDIR = src
-OBJDIR = obj
+OBJDIR = src/obj
 TSTDIR = test
 TSTOBJDIR = test/obj
 
