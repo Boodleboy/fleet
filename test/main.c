@@ -9,7 +9,7 @@ main(void) {
 	SRunner *sr = srunner_create(s);
 
 	dummy_tcase(s);
-	service_tcase(s);
+	error_tcase(s);
 
     srunner_run_all(sr, CK_ENV);
     int nf = srunner_ntests_failed(sr);

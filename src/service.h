@@ -1,14 +1,18 @@
+#include <apr-1/apr.h>
+#include <apr-1/apr_queue.h>
+
 #include "dummysvc.h"
 
 typedef struct Service Service;
 
 struct Service {
-	void (*func)(int);
+	void *(*func)(void*);
 	char name[100];
-	int status;
-	int pid;
-	int pipe;
 	int msize;
+
+	apr_queue_t *iq;
+	apr_queue_t *oq;
+	int status;
 };
 
 int init_service(Service *);

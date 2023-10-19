@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g 
+CFLAGS = -Wall -Wextra -g -lixp -lapr-1 -laprutil-1
 
 TARGET = fleet
 TESTTARG = testsuite
@@ -10,16 +10,14 @@ TSTDIR = test
 TSTOBJDIR = test/obj
 
 FILES = main\
-		service\
-		dummysvc
+		error
 
 TFILES = main\
 		 dummy\
-		 service
+		 error
 
-HFILES = service.h\
-		 ixp.h\
-		 dummysvc.h
+HFILES = ixp.h\
+		 error.h
 
 THFILES = suites.h
 
@@ -35,7 +33,7 @@ TSTDEP = $(filter-out $(OBJDIR)/main.o,$(OBJ))
 .PHONY: test
 
 $(TARGET): $(OBJ) 
-	$(CC) $(CFLAGS) -o $@ $^ -lixp 
+	$(CC) $(CFLAGS) -o $@ $^ 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(HDR)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -45,7 +43,7 @@ $(TSTOBJDIR)/%.o: $(TSTDIR)/%.c $(HDR) $(THDR)
 
 testsuite: $(TSTOBJ) $(TSTDEP)
 	echo $(TSTDEP)
-	$(CC) $(CFLAGS) -o $@ $^ -lixp -lcheck
+	$(CC) $(CFLAGS) -o $@ $^ -lcheck
 
 test: testsuite
 	./testsuite
